@@ -79,11 +79,17 @@
             function sendTransaction(tx) {
                 $.ajax({
                     type: "POST",
-                    url: 'localhost:3000/transaction/add',
-                    data: tx,
+                    url: 'http://localhost:3000/transaction/add',
+                    data: JSON.stringify(tx),
                     success: txSuccess,
-                    dataType: 'JSON'
+                    contentType: 'application/json',
                 });
+            }
+            function sendTransactionbackup(tx) {
+                $.post("http://localhost:3000/transaction/add", tx)
+                .done(function (data) {
+                alert("Data Loaded: " + data);
+  });
             }
             function txSuccess(data) {
                 console.log(data);

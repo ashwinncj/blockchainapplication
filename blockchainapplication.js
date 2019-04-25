@@ -3,12 +3,24 @@ const app=new express()
 const port=3000
 var myParser = require("body-parser")
 var md5 = require('md5')
+var cors = require('cors')
+app.use(cors())
+
+
+
+
 var mem_pool = [];
 var chain = [];
 var prev_hash = '0000000000000000000000000000000000';
 app.use(myParser.json());
 //app.use(myParser);
 app.listen(port)
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.get('/', function(req,res){
 res.send('Blockchain application running...')
