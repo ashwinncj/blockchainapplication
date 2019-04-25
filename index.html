@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <style>
+            #transaction-form{
+                display:inline-block;
+                width:400px;
+            }
+            #transaction-form input{
+                width:300px;
+                padding:5px;
+                margin:5px;
+            }
+            #transaction-form label{
+                font-weight:bold;
+                padding: 3px;
+                margin-top:20px;
+            }
+            #create-transaction{
+                background-color:papayawhip;
+                border:none;
+                padding:10px;
+                cursor:pointer;
+            }
+            #output-log{
+                margin-top:20px;
+                width:800px;
+                background-color: lightgray;
+                min-height:300px;
+                display:inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="display:inline-block">
+        <div id="transaction-form">
+            <h3><u>Initiate Transaction</u></h3>
+            <label>From</label><br />
+            <input type="text" id="from" /><br />
+            <label>To</label><br />
+            <input type="text" id="to" /><br />
+            <label>Order Num</label><br />
+            <input type="text" id="order_no" /><br />
+            <label>Article</label><br />
+            <input type="text" id="article" /><br />
+            <label>Stock</label><br />
+            <input type="text" id="stock" /><br />
+            <label>Unit</label><br />
+            <input type="text" id="unit" /><br />
+            <label>Price</label><br />
+            <input type="text" id="price" /><br />
+            <button id="create-transaction" type="button">Create Transaction</button>
+        </div>
+        
+        <div id="output-log">
+
+        </div>
+       </div>
+    </body>
+</html>
