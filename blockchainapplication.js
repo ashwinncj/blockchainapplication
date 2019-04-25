@@ -6,6 +6,10 @@ var md5 = require('md5')
 var cors = require('cors')
 app.use(cors())
 
+var fs = require('fs');
+//fs.writeFile('myjsonfile.json', json, 'utf8', callback);
+
+
 
 
 

@@ -37,62 +37,64 @@
     </head>
     <body>
         <div style="display:inline-block">
-        <div id="transaction-form">
-            <h3><u>Initiate Transaction</u></h3>
-            <label>From</label><br />
-            <input type="text" id="from" /><br />
-            <label>To</label><br />
-            <input type="text" id="to" /><br />
-            <label>Order Num</label><br />
-            <input type="text" id="order_no" /><br />
-            <label>Article</label><br />
-            <input type="text" id="article" /><br />
-            <label>Stock</label><br />
-            <input type="text" id="stock" /><br />
-            <label>Unit</label><br />
-            <input type="text" id="unit" /><br />
-            <label>Price</label><br />
-            <input type="text" id="price" /><br />
-            <button id="create-transaction" type="button">Create Transaction</button>
-        </div>
-        
-        <pre id="output-log">
+            <div id="transaction-form">
+                <h3><u>Initiate Transaction</u></h3>
+                <label>From</label><br />
+                <input type="text" id="from" /><br />
+                <label>To</label><br />
+                <input type="text" id="to" /><br />
+                <label>Order Num</label><br />
+                <input type="text" id="order_no" /><br />
+                <label>Article</label><br />
+                <input type="text" id="article" /><br />
+                <label>Stock</label><br />
+                <input type="text" id="stock" /><br />
+                <label>Unit</label><br />
+                <input type="text" id="unit" /><br />
+                <label>Price</label><br />
+                <input type="text" id="price" /><br />
+                <button id="create-transaction" type="button">Create Transaction</button>
+            </div>
 
-        </pre>
-       </div>
+            <pre id="output-log">
+
+            </pre>
+        </div>
         <script>
-            $("#create-transaction").click(function(){
+            $("#create-transaction").click(function () {
                 tx = {};
                 tx.from = $('#from').val();
                 tx.to = $('#to').val();
                 tx.details = {};
+                tx.details.datetime=new Date(); 
                 tx.details.order_no = $('#order_no').val();
                 tx.details.article = $('#article').val();
                 tx.details.stock = $('#stock').val();
                 tx.details.unit = $('#unit').val();
                 tx.details.price = $('#price').val();
-                $('#output-log').html(JSON.stringify(tx,undefined,2));
-                console.log(tx);
-                sendTransaction(tx);
+                transaction = {};
+                transaction.data = tx;
+                $('#output-log').html(JSON.stringify(transaction, undefined, 2));
+
+                sendTransaction(transaction);
             });
 
             function sendTransaction(tx) {
+                console.log(tx);
                 $.ajax({
                     type: "POST",
                     url: 'http://localhost:3000/transaction/add',
-                    data: tx,
-                    success: txSuccess,
-                    contentType: 'application/json',
+                    data: JSON.stringify(tx),
+                    success: function(data){
+                        txSuccess(data);
+                    },
+                    contentType: 'application/json'
+//                    dataType: 'json'
                 });
             }
-            function sendTransactionbackup(tx) {
-                $.post("http://localhost:3000/transaction/add", tx)
-                .done(function (data) {
-                alert("Data Loaded: " + data);
-  });
-            }
+
             function txSuccess(data) {
-                console.log(data);
+               $('#output-log').append('\nOutput: '+data);
             }
         </script>
 
