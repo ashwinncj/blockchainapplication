@@ -23,7 +23,7 @@
                 cursor:pointer;
             }
             #output-log{
-                position:fixed;
+                position:relative;
                 right:0;
                 top:60px;
                 margin-top:20px;
@@ -37,7 +37,7 @@
     </head>
     <body>
         <div style="display:inline-block">
-            <div id="transaction-form">
+            <div id="transaction-form" style="display:inline-block">
                 <h3><u>Initiate Transaction</u></h3>
                 <label>From</label><br />
                 <input type="text" id="from" /><br />
@@ -55,8 +55,12 @@
                 <input type="text" id="price" /><br />
                 <button id="create-transaction" type="button">Create Transaction</button>
             </div>
+            <button onclick="get_mempool();">Get Mempool</button>
+            <button onclick="mine_block();">Mine Block</button>
+            <button onclick="show_chain();">Show Blockchain</button>
 
-            <pre id="output-log">
+
+            <pre id="output-log" style="display:inline-block">
 
             </pre>
         </div>
@@ -96,6 +100,49 @@
             function txSuccess(data) {
                $('#output-log').append('\nOutput: '+data);
             }
+
+            function get_mempool() {
+                $.ajax({
+                    type: "POST",
+                    url: 'http://localhost:3000/mempool',
+                    data: '',
+                    success: function (data) {
+                        display_transactions(data);
+                    },
+                    contentType: 'application/json'
+                    //                    dataType: 'json'
+                });
+            }
+
+            function display_transactions(data) {
+                $('#output-log').html(JSON.stringify(data, undefined, 2));
+            }
+
+            function mine_block() {
+                $.ajax({
+                    type: "POST",
+                    url: 'http://localhost:3000/buildblock',
+                    data: '',
+                    success: function (data) {
+                        display_transactions(data);
+                    },
+                    contentType: 'application/json'
+                    //                    dataType: 'json'
+                });
+            }
+            function show_chain() {
+                $.ajax({
+                    type: "POST",
+                    url: 'http://localhost:3000/chain',
+                    data: '',
+                    success: function (data) {
+                        display_transactions(data);
+                    },
+                    contentType: 'application/json'
+                    //                    dataType: 'json'
+                });
+            }
+            
         </script>
 
     </body>

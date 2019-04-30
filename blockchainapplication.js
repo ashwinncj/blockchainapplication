@@ -31,11 +31,9 @@ res.send('Blockchain application running...')
 })
 
 app.post('/transaction/add', function (req, res) {
-    data= req.body.data
-    temp_tx = {};
-    temp_tx.tx = mem_pool.length + 1;
-    temp_tx.data = { from: data.from, to: data.to, details: data.details };
-    temp_tx.hash = md5(JSON.stringify(temp_tx.data));
+    data= req.body
+    temp_tx = req.body;
+    temp_tx.hash = md5(JSON.stringify(temp_tx));
     mem_pool.push(temp_tx);
     res.send('New transaction added to the memory pool.');
 })
