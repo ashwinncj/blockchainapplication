@@ -1,0 +1,167 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <style>
+        .form-control {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sales</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 form-group">
+                <form autocomplete="on">
+                    <label>Transaction type</label>
+                    <input class="form-control" type="text" id="transaction-type" value="sales" readonly />
+                    <label>From</label>
+                    <input class="form-control" type="text" id="from" value="Company1" readonly />
+                    <label>Transaction ID</label>
+                    <input type="text" class="form-control" id="transaction-id" name="transaction_id" />
+                    <label>Customer ID<button type="button" id="search-customer" class="btn btn-sm btn-primary">Search</button></label>
+                    <input type="text" class="form-control" id="customer-id" name="customer_id" />
+                    <label>Cutomer Name</label>
+                    <input type="text" class="form-control" id="customer-name" name="customer_name" readonly />
+                    <label>Area</label>
+                    <input type="text" class="form-control" id="area-code" name="area_code" readonly/>
+                    <label>Article ID<button type="button" id="search-article" class="btn btn-sm btn-primary">Search</button></label>
+                    <input type="text" class="form-control" id="article-id" name="article_id" />
+                    <label>Article Description</label>
+                    <input type="text" class="form-control" id="article-description" name="article_description" readonly/>
+                    <label>Stock</label>
+                    <input type="text" class="form-control" id="stock" name="stock" />
+                    <label>Units</label>
+                    <input type="text" class="form-control" id="article-unit" name="article_unit" readonly/>
+                    <button id="update-sales" type="button" class="btn btn-sm btn-primary">Update Sales</button>
+                </form>
+            </div>
+            <div id="output-log" class="col-lg-8" style="background-color: lightgray;min-height:300px;">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#update-sales").click(function () {
+            $('#output-log').html('Initiating Transaction...</br></br>');
+            tx = {};
+            tx.type = $('#transaction-type').val();
+            tx.from = $('#from').val();
+            tx.id = $('#customer-id').val();
+            tx.details = {};
+            tx.details.customer_description = $('#customer-description').val();
+            tx.details.customer_address = $('#customer-address').val();
+            tx.details.area_code = $('#customer-area-code').val();
+            tx.details.customer_account = $('#customer-account').val();
+            transaction = tx;
+
+            $('#output-log').append(JSON.stringify(transaction, undefined, 2)+'</br></br>');
+
+            sendTransaction(transaction);
+        });
+
+
+        function sendTransaction(tx) {
+            console.log(tx);
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:3000/transaction/add',
+                data: JSON.stringify(tx),
+                success: function (data) {
+                    txSuccess(data);
+                },
+                contentType: 'application/json'
+                //                    dataType: 'json'
+            });
+        }
+
+        function txSuccess(data) {
+            $('#output-log').append('\nOutput: ' + data);
+        }
+    </script>
+
+    <script>
+        //Search Customer Record
+        $("#search-customer").click(function () {
+            $('#output-log').html('Starting search...</br></br>');
+            tx = {};
+            tx.type = 'customer_master';
+            tx.id = $('#customer-id').val();
+            tx.description = $('#record-description').val();
+            transaction = tx;
+
+            $('#output-log').append(JSON.stringify(transaction, undefined, 2)+'</br></br>');
+
+            sendCustomer(transaction);
+        });
+
+
+        function sendCustomer(tx) {
+            console.log(tx);
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:3000/master/search',
+                data: JSON.stringify(tx),
+                success: function (data) {
+                    customerSuccess(data);
+                },
+                contentType: 'application/json'
+                //dataType: 'json'
+            });
+        }
+        var search_result = {};
+        function customerSuccess(data) {
+            search_result = data;
+            console.log(data);
+            $('#customer-name').val(data[0].details.customer_description);
+            $('#area-code').val(data[0].details.area_code);
+            $('#output-log').append('\nOutput: ' + JSON.stringify(data, undefined, 2));
+        }
+    </script>
+    <script>
+        //Search Article Record
+        $("#search-article").click(function () {
+            $('#output-log').html('Starting search...</br></br>');
+            tx = {};
+            tx.type = 'article_master';
+            tx.id = $('#article-id').val();
+            transaction = tx;
+
+            $('#output-log').append(JSON.stringify(transaction, undefined, 2)+'</br></br>');
+
+            sendArticle(transaction);
+        });
+
+
+        function sendArticle(tx) {
+            console.log(tx);
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:3000/master/search',
+                data: JSON.stringify(tx),
+                success: function (data) {
+                    articleSuccess(data);
+                },
+                contentType: 'application/json'
+                //dataType: 'json'
+            });
+        }
+        var search_result = {};
+        function articleSuccess(data) {
+            search_result = data;
+            console.log(data);
+            $('#article-description').val(data[0].details.article_description);
+            $('#article-unit').val(data[0].details.article_unit);
+            $('#output-log').append('\nOutput: ' + JSON.stringify(data, undefined, 2));
+        }
+    </script>
+
+</body>
+
+
+</html>
