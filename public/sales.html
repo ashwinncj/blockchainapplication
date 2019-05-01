@@ -52,12 +52,14 @@
             tx = {};
             tx.type = $('#transaction-type').val();
             tx.from = $('#from').val();
-            tx.id = $('#customer-id').val();
+            tx.transaction_id = $('#transaction-id').val();
+            tx.to = $('#customer-id').val();
             tx.details = {};
-            tx.details.customer_description = $('#customer-description').val();
-            tx.details.customer_address = $('#customer-address').val();
-            tx.details.area_code = $('#customer-area-code').val();
-            tx.details.customer_account = $('#customer-account').val();
+            tx.details.customer_description = $('#customer-name').val();
+            tx.details.article_id = $('#article-id').val();
+            tx.details.article_description = $('#article-description').val();
+            tx.details.stock = $('#stock').val();
+            tx.details.article_unit = $('#article-unit').val();
             transaction = tx;
 
             $('#output-log').append(JSON.stringify(transaction, undefined, 2)+'</br></br>');
